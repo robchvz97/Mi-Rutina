@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Mi Rutina" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Mi Rutina · Roberto</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">MI RUTINA</div>
+        <h1 id="dayTitle">Entrenamiento</h1>
+        <p id="daySubtitle">Carga tu sesión y progresa semana a semana.</p>
+      </div>
+      <button id="installBtn" class="icon-btn hidden" aria-label="Instalar app">＋</button>
+    </header>
+
+    <main>
+      <section id="workoutView" class="view active">
+        <div class="day-strip" id="dayStrip"></div>
+
+        <div class="summary-card">
+          <div>
+            <span class="muted">Sesión</span>
+            <strong id="sessionLabel">—</strong>
+          </div>
+          <div>
+            <span class="muted">Progreso</span>
+            <strong id="sessionProgress">0/0</strong>
+          </div>
+          <div>
+            <span class="muted">Series</span>
+            <strong id="seriesProgress">0</strong>
+          </div>
+        </div>
+
+        <div id="exerciseList" class="exercise-list"></div>
+
+        <button id="finishBtn" class="primary-btn">Terminar entrenamiento</button>
+      </section>
+
+      <section id="historyView" class="view">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">HISTORIAL</div>
+            <h2>Tus entrenamientos</h2>
+          </div>
+          <button id="clearHistoryBtn" class="text-btn danger">Borrar historial</button>
+        </div>
+        <div id="historyList" class="history-list"></div>
+      </section>
+
+      <section id="settingsView" class="view">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">AJUSTES</div>
+            <h2>Entrenamiento</h2>
+          </div>
+        </div>
+
+        <div class="settings-card">
+          <label>
+            Descanso en ejercicios grandes
+            <select id="bigRest">
+              <option value="120">2:00</option>
+              <option value="150" selected>2:30</option>
+              <option value="180">3:00</option>
+            </select>
+          </label>
+          <label>
+            Descanso en aislamientos
+            <select id="smallRest">
+              <option value="60">1:00</option>
+              <option value="90" selected>1:30</option>
+              <option value="120">2:00</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="settings-card">
+          <h3>Cómo instalarla en iPhone</h3>
+          <p>Abre esta app desde Safari, toca <b>Compartir</b> y elige <b>Agregar a pantalla de inicio</b>.</p>
+          <p class="muted">La información de tus sesiones se guarda localmente en este dispositivo.</p>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button data-view="workoutView" class="nav-btn active"><span>🏋️</span>Rutina</button>
+      <button data-view="historyView" class="nav-btn"><span>📈</span>Historial</button>
+      <button data-view="settingsView" class="nav-btn"><span>⚙️</span>Ajustes</button>
+    </nav>
+  </div>
+
+  <div id="timerOverlay" class="timer-overlay hidden">
+    <div class="timer-card">
+      <div class="eyebrow">DESCANSO</div>
+      <div id="timerDisplay" class="timer-display">2:30</div>
+      <p id="timerExercise">Recupérate para la siguiente serie.</p>
+      <div class="timer-actions">
+        <button id="minus15" class="secondary-btn">−15 s</button>
+        <button id="stopTimer" class="secondary-btn">Omitir</button>
+        <button id="plus15" class="secondary-btn">+15 s</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
