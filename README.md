@@ -1,27 +1,12 @@
-# Mi Rutina · Roberto
+# Mi Rutina · Roberto (actualizada)
 
-PWA móvil para registrar la rutina de 5 días.
+Cambios en esta versión:
+- Ahora la columna de peso está en LB (libras).
+- Cada ejercicio muestra 2 imágenes de referencia: inicio y final.
+- Mantiene historial, cronómetro y rutina de 5 días.
 
-## Incluye
-- Rutina cargada de lunes a viernes.
-- Registro por serie: kg, repeticiones y RIR.
-- Check de series y ejercicios.
-- Historial local.
-- Referencia de la última sesión por ejercicio.
-- Cronómetro configurable.
-- Funciona offline después de la primera carga.
+Para actualizar en GitHub:
+- Reemplaza app.js, index.html, styles.css, sw.js y manifest.webmanifest.
+- Sube también la carpeta exercise_media completa.
 
-## Cómo usarla en iPhone
-Para instalarla como app, debe estar publicada en una URL HTTPS.
-
-Opciones sencillas:
-1. GitHub Pages.
-2. Netlify Drop.
-3. Vercel.
-
-Después:
-- Abre la URL en Safari.
-- Toca Compartir.
-- Elige "Agregar a pantalla de inicio".
-
-Los datos se guardan en localStorage del dispositivo/navegador.
+GitHub Pages actualizará el sitio en unos minutos.

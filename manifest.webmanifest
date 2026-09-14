@@ -1,7 +1,7 @@
 {
   "name": "Mi Rutina · Roberto",
   "short_name": "Mi Rutina",
-  "description": "Rutina de hipertrofia de 5 días con registro de series, peso, repeticiones y RIR.",
+  "description": "Rutina de hipertrofia de 5 días con registro de series en libras y guías visuales de ejercicios.",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#0b0f17",
