@@ -77,8 +77,8 @@ function mediaHtml(key){ return `
 <div class="demo-wrap">
   <div class="demo-title">Demostración</div>
   <div class="media-grid">
-    <div class="media-card"><img src="exercise_media/${key}_inicio.png" alt="${key} inicio"><div class="media-label">Inicio</div></div>
-    <div class="media-card"><img src="exercise_media/${key}_final.png" alt="${key} final"><div class="media-label">Final</div></div>
+    <div class="media-card"><img src="${key}_inicio.png" alt="${key} inicio"><div class="media-label">Inicio</div></div>
+    <div class="media-card"><img src="${key}_final.png" alt="${key} final"><div class="media-label">Final</div></div>
   </div>
 </div>`; }
 function renderWorkout(){ renderDayStrip(); const r=ROUTINE[selectedDay]; $("#dayTitle").textContent=r.title; $("#daySubtitle").textContent="Registra libras, repeticiones y RIR de cada serie."; $("#sessionLabel").textContent=r.short; ensureSession(); const container=$("#exerciseList"); container.innerHTML=""; const current=loadSessions()[sessionKey()];
