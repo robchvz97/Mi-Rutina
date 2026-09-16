@@ -116,7 +116,51 @@ function bindWorkoutInputs(){
   $$(".set-done").forEach(el=>{ el.onchange=()=>{ const ex=ROUTINE[selectedDay].exercises[+el.dataset.ex], set=+el.dataset.set; updateSession(s=>{ s.exercises[ex.name] ||= {done:false,sets:Array.from({length:ex.sets},()=>({kg:"",reps:"",rir:"",done:false}))}; s.exercises[ex.name].sets[set].done=el.checked; if(el.checked){ const allDone=s.exercises[ex.name].sets.every(x=>x.done); if(allDone) s.exercises[ex.name].done=true; } }); renderWorkout(); }; });
   $$(".rest-btn").forEach(btn=>{ btn.onclick=()=>{ const st=loadSettings(); const sec=btn.dataset.rest==="big" ? +st.bigRest : +st.smallRest; startTimer(sec,btn.dataset.name); }; }); }
 function updateProgress(){ const session=loadSessions()[sessionKey()] || ensureSession(); const r=ROUTINE[selectedDay]; let exDone=0,setDone=0,totalSets=0; r.exercises.forEach(ex=>{ const sx=session.exercises[ex.name]; if(sx?.done) exDone++; totalSets += ex.sets; setDone += sx?.sets?.filter(s=>s.done).length || 0; }); $("#sessionProgress").textContent=`${exDone}/${r.exercises.length}`; $("#seriesProgress").textContent=`${setDone}/${totalSets}`; }
-function finishWorkout(){ updateSession(s=>{ s.completed=true; s.finishedAt=new Date().toISOString(); }); alert("Entrenamiento guardado ✅"); renderHistory(); }
+function finishWorkout(){
+
+  const all = loadSessions();
+  const key = sessionKey();
+
+  const session =
+    all[key] || ensureSession();
+
+  // Guardamos el entrenamiento terminado
+  session.completed = true;
+  session.finishedAt =
+    new Date().toISOString();
+
+  // Copia permanente para el historial
+  const historyKey =
+    `${key}_done_${Date.now()}`;
+
+  all[historyKey] =
+    JSON.parse(
+      JSON.stringify(session)
+    );
+
+  // Creamos una sesión nueva y limpia
+  all[key] = {
+    date: ymd(),
+    day: selectedDay,
+    title:
+      ROUTINE[selectedDay]?.title ||
+      "Descanso",
+    completed: false,
+    exercises: {}
+  };
+
+  saveSessions(all);
+
+  alert(
+    "Entrenamiento guardado ✅"
+  );
+
+  // Limpia visualmente todas las palomitas
+  renderWorkout();
+
+  // Mantiene el entrenamiento anterior en historial
+  renderHistory();
+}
 function renderHistory(){ const all=loadSessions(); const list=$("#historyList"); const entries=Object.values(all).filter(s=>s.completed).sort((a,b)=>(b.finishedAt||b.date).localeCompare(a.finishedAt||a.date)); if(!entries.length){ list.innerHTML=`<div class="history-card"><p class="muted">Todavía no tienes entrenamientos terminados.</p></div>`; return; }
   list.innerHTML=entries.map(s=>{ const date=new Date(s.date+"T12:00:00").toLocaleDateString("es-MX",{weekday:"short",day:"numeric",month:"short"}); const items=Object.entries(s.exercises||{}).filter(([_,v])=>v.done || v.sets?.some(x=>x.kg||x.reps)).map(([name,v])=>{ const doneSets=(v.sets||[]).filter(x=>x.kg||x.reps); const txt=doneSets.map(x=>`${x.kg||"—"} lb × ${x.reps||"—"}${x.rir!==""?` · RIR ${x.rir}`:""}`).join(" / "); return `<div class="history-item"><strong>${name}</strong><span class="muted">${txt||"Completado"}</span></div>`; }).join(""); return `<article class="history-card"><h3>${s.title}</h3><div class="muted">${date}</div><div class="history-exercises">${items}</div></article>`; }).join(""); }
 function startTimer(sec,name){ clearInterval(timerInt); timerSeconds=sec; $("#timerExercise").textContent=name; $("#timerOverlay").classList.remove("hidden"); drawTimer(); timerInt=setInterval(()=>{ timerSeconds--; drawTimer(); if(timerSeconds<=0){ clearInterval(timerInt); if("vibrate" in navigator) navigator.vibrate([200,100,200]); setTimeout(()=>$("#timerOverlay").classList.add("hidden"),800); } },1000); }
