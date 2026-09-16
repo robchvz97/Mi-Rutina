@@ -1303,10 +1303,7 @@ function clearTodayOpenSessions(){
       ) || "{}"
     );
 
-  const today =
-    new Date()
-      .toISOString()
-      .slice(0, 10);
+  const today = ymd();
 
   for(let day = 1; day <= 5; day++){
     delete all[
@@ -1511,16 +1508,40 @@ function sessionKey(day=selectedDay){ return `${ymd()}_d${day}`; }
 function ensureSession(day=selectedDay){ const all=loadSessions(), key=sessionKey(day); if(!all[key]){ all[key]={date:ymd(), day, title:ROUTINE[day]?.title||"Descanso", completed:false, exercises:{}}; saveSessions(all);} return all[key]; }
 function updateSession(mutator){ const all=loadSessions(), key=sessionKey(); const session=all[key] || ensureSession(); mutator(session); all[key]=session; saveSessions(all); }
 function lastCompletedForExercise(name, excludeKey=sessionKey()){ const all=loadSessions(); const rows=Object.entries(all).filter(([k,s])=>k!==excludeKey && s.completed && s.exercises && s.exercises[name]).sort((a,b)=> (b[1].finishedAt || b[1].date).localeCompare(a[1].finishedAt || a[1].date)); if(!rows.length) return null; return rows[0][1].exercises[name]; }
-function renderDayStrip(){ const strip=$("#dayStrip"); strip.innerHTML=""; [1,2,3,4,5].forEach(day=>{ const b=document.createElement("button"); b.className="day-chip"+(day===selectedDay?" active":""); b.textContent=ROUTINE[day].short; b.onclick=()=>{
-  selectedDay = day;
+function renderDayStrip(){
+  const strip = $("#dayStrip");
 
-  localStorage.setItem(
-    STORE.currentDay,
-    String(selectedDay)
-  );
+  strip.innerHTML = "";
 
-  renderWorkout();
-};}
+  [1,2,3,4,5].forEach(day => {
+
+    const b =
+      document.createElement("button");
+
+    b.className =
+      "day-chip" +
+      (day === selectedDay
+        ? " active"
+        : "");
+
+    b.textContent =
+      ROUTINE[day].short;
+
+    b.onclick = () => {
+
+      selectedDay = day;
+
+      localStorage.setItem(
+        STORE.currentDay,
+        String(selectedDay)
+      );
+
+      renderWorkout();
+    };
+
+    strip.appendChild(b);
+  });
+}
 function mediaHtml(key){ return `
 <div class="demo-wrap">
   <div class="demo-title">Demostración</div>
@@ -1538,8 +1559,11 @@ function renderWorkout(){ renderDayStrip(); const r=ROUTINE[selectedDay]; $("#da
       <div class="exercise-head">
         <input class="exercise-check" type="checkbox" ${saved.done?"checked":""} data-ex="${idx}">
         <div class="exercise-title">
-          <h3>${ex.name}</h3>
-          <div class="exercise-meta">${ex.sets} series · ${ex.reps} reps${ex.note?` · ${ex.note}`:""}</div>
+          <h3>${ex.name}</h3><div class="exercise-meta">
+  ${ex.sets} series · ${ex.reps} reps
+  ${ex.rir ? ` · RIR objetivo ${ex.rir}` : ""}
+  ${ex.note ? ` · ${ex.note}` : ""}
+</div>
           <div class="last-session">${lastText}</div>
         </div>
       </div>
