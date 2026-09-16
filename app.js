@@ -631,6 +631,7 @@ const EXERCISE_GROUPS = {
 
 };
 const READY_MEDIA = new Set([
+  "smith_incline_press",
   "incline_press",
   "flat_press",
   "cable_fly",
