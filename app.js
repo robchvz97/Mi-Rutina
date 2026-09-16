@@ -281,19 +281,10 @@ const EXERCISES = {
   },
 
   convergent_chest_press: {
-    name: "Press convergente en máquina",
-    type: "big",
-    media: [
-  {
-    src: "convergent_chest_press_inicio.png",
-    label: "Inicio"
-  },
-  {
-    src: "convergent_chest_press_final.png",
-    label: "Final"
-  }
-],
-  },
+  name: "Press convergente en máquina",
+  type: "big",
+  media: "convergent_chest_press"
+},
 
   assisted_dips: {
     name: "Fondos asistidos",
@@ -641,6 +632,7 @@ const EXERCISE_GROUPS = {
 };
 const READY_MEDIA = new Set([
   "smith_incline_press",
+  "convergent_chest_press",
   "incline_press",
   "flat_press",
   "cable_fly",
