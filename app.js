@@ -632,6 +632,7 @@ const EXERCISE_GROUPS = {
 };
 const READY_MEDIA = new Set([
   "smith_incline_press",
+  "pec_deck",
   "assisted_dips",
   "convergent_chest_press",
   "incline_press",
