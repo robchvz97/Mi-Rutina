@@ -93,6 +93,7 @@ let ROUTINE = loadRoutine();
 let previewRoutine = null;
 
 const EXERCISES = {
+  
   incline_press: {
     name: "Press inclinado en máquina o Smith",
     type: "big",
@@ -631,6 +632,7 @@ const EXERCISE_GROUPS = {
 
 };
 const READY_MEDIA = new Set([
+  "smith_shoulder_press",
   "smith_incline_press",
   "pec_deck",
   "assisted_dips",
