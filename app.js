@@ -283,7 +283,16 @@ const EXERCISES = {
   convergent_chest_press: {
     name: "Press convergente en máquina",
     type: "big",
-    media: "convergent_chest_press"
+    media: [
+  {
+    src: "convergent_chest_press_inicio.png",
+    label: "Inicio"
+  },
+  {
+    src: "convergent_chest_press_final.png",
+    label: "Final"
+  }
+],
   },
 
   assisted_dips: {
