@@ -1,7 +1,7 @@
 
 const ORIGINAL_ROUTINE = {
   1: {
-    short:"Lun", title:"Pecho + tríceps + deltoide lateral",
+    short:"D1", title:"Pecho + tríceps + deltoide lateral",
     exercises:[
       {name:"Press inclinado en máquina o Smith", sets:3, reps:"6-10", type:"big", media:"incline_press"},
       {name:"Press plano con mancuernas o máquina", sets:3, reps:"8-12", type:"big", media:"flat_press"},
@@ -12,7 +12,7 @@ const ORIGINAL_ROUTINE = {
     ]
   },
   2: {
-    short:"Mar", title:"Glúteo",
+    short:"D2", title:"Glúteo",
     exercises:[
       {name:"Hip thrust con barra o máquina", sets:4, reps:"6-10", type:"big", media:"hip_thrust"},
       {name:"Peso muerto rumano", sets:3, reps:"8-10", type:"big", media:"rdl"},
@@ -22,7 +22,7 @@ const ORIGINAL_ROUTINE = {
     ]
   },
   3: {
-    short:"Mié", title:"Espalda + bíceps",
+    short:"D3", title:"Espalda + bíceps",
     exercises:[
       {name:"Jalón al pecho agarre neutro", sets:3, reps:"6-10", type:"big", media:"lat_pulldown"},
       {name:"Remo apoyado en máquina", sets:3, reps:"8-12", type:"big", media:"machine_row"},
@@ -34,7 +34,7 @@ const ORIGINAL_ROUTINE = {
     ]
   },
   4: {
-    short:"Jue", title:"Hombros + brazos",
+    short:"D4", title:"Hombros + brazos",
     exercises:[
       {name:"Press de hombro en máquina", sets:3, reps:"6-10", type:"big", media:"shoulder_press"},
       {name:"Elevaciones laterales con mancuerna", sets:3, reps:"10-15", type:"small", media:"lateral_db"},
@@ -46,7 +46,7 @@ const ORIGINAL_ROUTINE = {
     ]
   },
   5: {
-    short:"Vie", title:"Pierna: cuádriceps + femoral + pantorrilla",
+    short:"D5", title:"Pierna: cuádriceps + femoral + pantorrilla",
     exercises:[
       {name:"Hack squat", sets:3, reps:"6-10", type:"big", media:"hack_squat"},
       {name:"Prensa", sets:3, reps:"10-15", type:"big", media:"leg_press"},
@@ -62,7 +62,8 @@ const ORIGINAL_ROUTINE = {
 const STORE = {
   sessions: "roberto_gym_sessions_v1",
   settings: "roberto_gym_settings_v1",
-  routine: "roberto_gym_routine_v2"
+  routine: "roberto_gym_routine_v2",
+  currentDay: "roberto_gym_current_day_v1"
 };
 function cloneRoutine(routine){
   return JSON.parse(
@@ -854,11 +855,12 @@ function makePullDay(
       EXERCISE_GROUPS.verticalPull
     );
 
-  const latIso =
-    uniquePick(
-      EXERCISE_GROUPS.latIsolation,
-      used
-    );
+ const latIso =
+  uniquePick(
+    EXERCISE_GROUPS.latIsolation,
+    used,
+    EXERCISE_GROUPS.verticalPull
+  );
 
   const rearDelt =
     uniquePick(
@@ -1486,7 +1488,18 @@ function initRoutineGenerator(){
     }
   }
 }
-let selectedDay = (new Date().getDay() >= 1 && new Date().getDay() <= 5) ? new Date().getDay() : 1;
+let selectedDay =
+  Math.min(
+    5,
+    Math.max(
+      1,
+      Number(
+        localStorage.getItem(
+          STORE.currentDay
+        )
+      ) || 1
+    )
+  );
 let timerInt = null, timerSeconds = 0, installPrompt = null;
 const $ = s => document.querySelector(s); const $$ = s => [...document.querySelectorAll(s)];
 function ymd(date=new Date()){ const y=date.getFullYear(), m=String(date.getMonth()+1).padStart(2,"0"), d=String(date.getDate()).padStart(2,"0"); return `${y}-${m}-${d}`; }
@@ -1498,7 +1511,16 @@ function sessionKey(day=selectedDay){ return `${ymd()}_d${day}`; }
 function ensureSession(day=selectedDay){ const all=loadSessions(), key=sessionKey(day); if(!all[key]){ all[key]={date:ymd(), day, title:ROUTINE[day]?.title||"Descanso", completed:false, exercises:{}}; saveSessions(all);} return all[key]; }
 function updateSession(mutator){ const all=loadSessions(), key=sessionKey(); const session=all[key] || ensureSession(); mutator(session); all[key]=session; saveSessions(all); }
 function lastCompletedForExercise(name, excludeKey=sessionKey()){ const all=loadSessions(); const rows=Object.entries(all).filter(([k,s])=>k!==excludeKey && s.completed && s.exercises && s.exercises[name]).sort((a,b)=> (b[1].finishedAt || b[1].date).localeCompare(a[1].finishedAt || a[1].date)); if(!rows.length) return null; return rows[0][1].exercises[name]; }
-function renderDayStrip(){ const strip=$("#dayStrip"); strip.innerHTML=""; [1,2,3,4,5].forEach(day=>{ const b=document.createElement("button"); b.className="day-chip"+(day===selectedDay?" active":""); b.textContent=ROUTINE[day].short; b.onclick=()=>{selectedDay=day; renderWorkout();}; strip.appendChild(b); }); }
+function renderDayStrip(){ const strip=$("#dayStrip"); strip.innerHTML=""; [1,2,3,4,5].forEach(day=>{ const b=document.createElement("button"); b.className="day-chip"+(day===selectedDay?" active":""); b.textContent=ROUTINE[day].short; b.onclick=()=>{
+  selectedDay = day;
+
+  localStorage.setItem(
+    STORE.currentDay,
+    String(selectedDay)
+  );
+
+  renderWorkout();
+};}
 function mediaHtml(key){ return `
 <div class="demo-wrap">
   <div class="demo-title">Demostración</div>
@@ -1576,7 +1598,15 @@ function finishWorkout(){
   };
 
   saveSessions(all);
+selectedDay =
+  selectedDay >= 5
+    ? 1
+    : selectedDay + 1;
 
+localStorage.setItem(
+  STORE.currentDay,
+  String(selectedDay)
+);
   alert(
     "Entrenamiento guardado ✅"
   );
