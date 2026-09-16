@@ -632,6 +632,7 @@ const EXERCISE_GROUPS = {
 
 };
 const READY_MEDIA = new Set([
+  "bayesian_curl",
   "smith_row",
   "pullover_machine",
   "straight_arm_pulldown",
