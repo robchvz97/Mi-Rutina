@@ -632,6 +632,7 @@ const EXERCISE_GROUPS = {
 
 };
 const READY_MEDIA = new Set([
+  "straight_arm_pulldown",
   "chest_supported_row_unilateral",
   "tbar_row",
   "assisted_pullup",
